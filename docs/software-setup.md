@@ -29,6 +29,7 @@ rustup component add rustfmt clippy rust-analyzer rust-src
 | RustRover (alternative to VS Code) | jetbrains.com/rust | 0 | IDE. Free for non-commercial use. Check the current license terms. |
 | `bacon` (optional) | `cargo install --locked bacon` | 0 | Runs `cargo check`, `clippy`, or tests again on each file change |
 | Rustlings | `cargo install rustlings` | 1 | Small exercises |
+| `cargo-expand` | `cargo install --locked cargo-expand` | 3 | Shows the code after macro expansion |
 | `sqlx-cli` | `cargo install --locked sqlx-cli --no-default-features --features sqlite` | 7 | Database migrations and offline query data |
 | An HTTP client: `curl` (included in Windows 10 and newer, macOS, and most Linux systems), or a graphical client (for example Bruno) | | 7 | Send requests to your API |
 | SQLite command-line shell (`sqlite3`, optional) | sqlite.org | 7 | Look at the database |

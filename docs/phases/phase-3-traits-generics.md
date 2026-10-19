@@ -15,6 +15,7 @@ At the end of this phase, you can:
 - Explain the orphan rule and work around it with a newtype.
 - Use closures and explain `Fn`, `FnMut`, and `FnOnce`.
 - Write data pipelines with iterator adapters, and implement your own iterator.
+- Write simple declarative macros with `macro_rules!`, and decide when a function or a generic is better.
 
 ## Reading
 
@@ -25,6 +26,8 @@ At the end of this phase, you can:
 | The standard library documentation | The module pages `std::iter`, `std::convert`, `std::cmp`, `std::fmt` |
 | Rust API Guidelines (rust-lang.github.io/api-guidelines) | "Interoperability": the traits that a type must implement |
 | David Drysdale, *Effective Rust* (effective-rust.com) | The items about standard traits, generics and trait objects, and iterator transforms |
+| The Rust Programming Language (the Book) | "Advanced Features", the part about macros (only declarative macros) |
+| The Little Book of Rust Macros (veykril.github.io/tlborm) | The chapters about the basics of `macro_rules!`: fragments, repetitions, hygiene. Optional. |
 
 ## Topics
 
@@ -227,6 +230,62 @@ assert!(parsed.is_err());
 - `T: ?Sized` removes the default bound. Use it to accept `str` or `dyn Trait` behind a reference: `fn show<T: ?Sized + Display>(x: &T)`.
 - **Marker traits** have no methods. They say something about the type: `Copy`, `Send`, `Sync` (phase 6), `Sized`, `Unpin` (phase 9).
 
+### 3.12 Declarative macros
+
+A macro is code that writes code at compile time. You already use many macros: `println!`, `vec!`, `assert_eq!`, and `#[derive(...)]`. A **declarative macro** (`macro_rules!`) matches the tokens of its input against patterns, and replaces the call with the code of the matching rule.
+
+```rust
+use std::fmt;
+
+macro_rules! impl_display_for_ids {
+    ($($name:ident),+ $(,)?) => {
+        $(
+            impl fmt::Display for $name {
+                fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                    write!(f, "{}#{}", stringify!($name), self.0)
+                }
+            }
+        )+
+    };
+}
+
+struct AccountId(u64);
+struct TransactionId(u64);
+
+impl_display_for_ids!(AccountId, TransactionId);
+// AccountId(7).to_string() is "AccountId#7".
+```
+
+- **Fragments** capture a part of the input. Each fragment has a type:
+
+  | Fragment | Matches | Example |
+  |---|---|---|
+  | `$x:expr` | An expression | `2 + 3`, `items.len()` |
+  | `$t:ty` | A type | `u64`, `Vec<String>` |
+  | `$n:ident` | An identifier | `AccountId`, `total` |
+  | `$l:literal` | A literal | `42`, `"text"` |
+  | `$p:pat` | A pattern | `Some(x)`, `1..=9` |
+  | `$b:block` | A block | `{ a + b }` |
+  | `$t:tt` | One token tree: one token, or a group in `()`, `[]`, or `{}` | Anything |
+
+- **Repetitions:** `$( ... ),*` matches zero or more items with a comma between them. `+` means one or more. `?` means zero or one. `$(,)?` permits a comma after the last item. Use the same repetition in the output to generate code for each item.
+- **Several rules:** a macro can have several rules. The compiler uses the first rule that matches.
+- **Syntax, not text.** A Rust macro works on the syntax tree. `square!(2 + 3)` with the rule `($x:expr) => { $x * $x }` gives 25. In C, `#define SQUARE(x) x * x` gives `2 + 3 * 2 + 3`, which is 11.
+- **Hygiene:** a local variable that the macro makes cannot clash with a variable of the caller that has the same name.
+- **Scope:** a `macro_rules!` macro can be used only after its definition in the file. `#[macro_export]` exports it at the root of the crate. Inside an exported macro, write `$crate::path` to refer to items of your crate.
+- **See the expansion:** `cargo expand` (install it with `cargo install --locked cargo-expand`) prints the code after the expansion of all macros.
+
+**When to write a macro.** A macro is harder to read, to debug, and to document than a function, and rust-analyzer helps less inside it. Use a function first, then generics, then a trait. Write a macro only when these cannot do the job:
+
+| Need | Example |
+|---|---|
+| The same trait implementation for many types | `impl_display_for_ids!` above |
+| A variable number of arguments | `vec![1, 2, 3]`, `hashmap! { "a" => 1 }` |
+| A table of test cases | One test function for each line of a table |
+| Code that needs identifiers or types as input | Generate a struct and its methods from a list of fields |
+
+Procedural macros (custom `#[derive]`, attribute macros) are more powerful. Phase 9, module 9.2, teaches them.
+
 ## Exercises
 
 Make the workspace `labs/phase-3-traits/`. Exercises marked **core** are for all learners.
@@ -289,6 +348,24 @@ Use iterator adapters, not index loops. Each function takes `impl Iterator<Item 
 2. Measure both in debug and in release builds with `std::time::Instant`. Explain the results.
 3. Open the code in Compiler Explorer (godbolt.org) with `-C opt-level=3`. Compare the assembly of the two functions.
 
+### Exercise 3.9: Declarative macros (core)
+
+1. Write a macro `hashmap!` that makes a `HashMap` from `key => value` pairs: `hashmap! { "a" => 1, "b" => 2 }`. Permit an empty call and a comma after the last pair. Write tests for the three cases.
+2. Write a macro that generates one test function for each line of a table. Use it for the `FromStr` tests of `Duration` (exercise 3.2):
+
+   ```rust
+   parse_tests! {
+       parses_minutes: "90m" => Ok(Duration::from_minutes(90)),
+       parses_hours_and_minutes: "1h 05m" => Ok(Duration::from_minutes(65)),
+       rejects_empty_input: "" => Err(ParseDurationError::Empty),
+   }
+   ```
+
+   Use the names of the constructor and of the error type of your own `Duration`. A failing line must show the name of its test in the output of `cargo test`.
+3. Write a macro that implements `Add` and `Sub` for several newtypes over `u64` in one call.
+4. Run `cargo expand` on the tests of step 2. Read the generated code.
+5. Look at each macro again. Could a function or a generic function do the same job? Write the answer and the reason in your engineering notebook.
+
 ## Done criteria
 
 - [ ] I can define a trait with a default method and implement it for my types and for foreign types.
@@ -298,6 +375,7 @@ Use iterator adapters, not index loops. Each function takes `impl Iterator<Item 
 - [ ] I can explain the orphan rule and use a newtype or an extension trait.
 - [ ] I can explain `Fn`, `FnMut`, and `FnOnce` and select the correct bound for a parameter.
 - [ ] I can write a data pipeline with iterator adapters, and collect results into `Result<Vec<_>, _>`.
+- [ ] I can write a `macro_rules!` macro with fragments and repetitions, and explain when a function is a better choice.
 
 ## Next
 

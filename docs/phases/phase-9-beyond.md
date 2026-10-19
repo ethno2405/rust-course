@@ -45,9 +45,9 @@ This phase has independent modules. Select the modules that fit your goal. Ask t
 
 **Why:** macros remove repetitive code and make small languages inside Rust. `serde`, `clap`, `tokio`, `sqlx`, and `thiserror` all use procedural macros.
 
-**Learn:**
+**Learn:** phase 3, topic 3.12, teaches the basics of `macro_rules!`. This module goes deeper.
 
-- **Declarative macros** (`macro_rules!`): pattern matching on tokens, repetitions, hygiene, the export of macros.
+- **Declarative macros** (`macro_rules!`): recursive macros, token-tree munchers, internal rules, and the export of macros with `$crate`.
 - **Procedural macros:** derive macros, attribute macros, and function-like macros. A separate crate with `proc-macro = true`. The crates `syn` (parse), `quote` (generate), and `proc-macro2`.
 - Good error messages in macros: `syn::Error` with a span.
 - `cargo expand` shows the code after macro expansion.
