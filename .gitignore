@@ -1,0 +1,44 @@
+# Rust build output
+target/
+**/*.rs.bk
+*.pdb
+
+# Tool output
+mutants.out/
+mutants.out.old/
+lcov.info
+tarpaulin-report.html
+*.profraw
+flamegraph.svg
+perf.data*
+*.snap.new
+*.pending-snap
+
+# Databases and local data (never commit real personal data)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+data/private/
+
+# Editor and tool files
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+.idea/
+
+# Books and other documents (copyright)
+books/
+*.pdf
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.secret
+
+# Local backups of learner data
+# learner/.gitignore ignores the learner data on master.
+learner-backup-*/
