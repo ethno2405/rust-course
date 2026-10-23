@@ -15,22 +15,24 @@ The `master` branch is the course baseline. It contains only the course document
 | `master` | Course documents | Changes to the course documents only |
 | `track/<YYYY-MM-DD>` | Course documents and the learner files: `learner/`, `labs/`, and `.github/workflows/` (from phase 8) | Learner files only |
 
-- On `master`, the file `learner/.gitignore` ignores all files in `learner/` except itself. Do not change this file on `master`. On a track branch, change it only in the setup commit (see "New track branch").
+- On `master`, the file `learner/.gitignore` ignores all files in `learner/` except itself. Do not change this file on `master`. On a track branch, change it only in the setup commit (see `docs/mentor/track-branches.md`).
 - **Learner files** are the files in `learner/`, `labs/`, and `.github/workflows/`. GitHub Actions reads workflows only from `.github/workflows/` in the repository root, so the CI pipeline of the learner (phase 8) lives there. `master` has no `.github/` directory.
 - Never commit learner files to `master`. The only exception is `learner/.gitignore`. Never merge a track branch into `master`.
 - Never use `git add -f`.
-- Do not change the course documents directly on a track branch. Course changes come to a track branch only through a merge: of `master`, or of a fix branch (see "Errors in the course"). If the learner finds an error in the course, or asks for a change to a course document, follow "Errors in the course".
+- Do not change the course documents directly on a track branch. Course changes come to a track branch only through a merge: of `master`, or of a fix branch. If the learner finds an error in the course, or asks for a change to a course document, follow `docs/mentor/course-errors.md`.
 - To get course updates on a track branch, merge `master` into the track branch: `git merge master`. If `master` has a remote, update the local `master` first.
 - Before you switch branches, run `git status --porcelain --ignored -- learner/ labs/ .github/workflows/`. Commit or back up all changes first. A checkout can overwrite ignored files and does not give a warning.
 - The learner data contains personal data: background, levels, goals, and mentor observations. Before the first push of a track branch, tell the learner that all persons who can read the remote can read this data. If the remote is public, recommend a private repository as a second remote with the name `private`. Push `master` to the public remote and the track branches to `private`. GitHub does not permit a private fork of a public repository, so the private repository must be a new, empty repository.
 
-### New track branch
+### Procedures in other files
 
-To make a branch for a new learner, do these steps:
+Some procedures are necessary only seldom. They are in separate files, so that agents do not load them in every session. When a trigger in this table occurs, read the file and follow it exactly.
 
-1. Run `git switch -c track/<YYYY-MM-DD> master` with the date today. If a branch with this name exists, add a number: `track/<YYYY-MM-DD>-2`.
-2. Replace the content of `learner/.gitignore` with one line: `# Track learner data on this branch.`
-3. Run `git add -- learner/.gitignore`. Commit with the message "Track learner data on this branch".
+| Trigger | File |
+|---|---|
+| A new learner needs a track branch. | `docs/mentor/track-branches.md`, "New track branch" |
+| The learner asks to reset the course, start from scratch, or clear their data. A reset deletes data. | `docs/mentor/track-branches.md`, "Reset (start from scratch)" |
+| You or the learner find an error in the course documents or the mentor instructions. The learner asks for a change to a course document. | `docs/mentor/course-errors.md` |
 
 ### Session start
 
@@ -41,11 +43,11 @@ Do these steps at the start of every session, before you teach:
    | Branch | Action |
    |---|---|
    | `track/<YYYY-MM-DD>` | Continue with step 2. |
-   | `master` | If the request is a change to the course documents, do the work on `master` and stop the mentor protocol here. Otherwise, run `git fetch --all` (if the repository has a remote) and `git branch -a --list "track/*" "*/track/*"`. Show the track branches, and ask which track to continue. If the user does not know, read the profile on each branch (`git show <branch>:learner/profile.md`) and show a short summary. For a known track, run `git switch <branch>`. For a new learner, make a branch as "New track branch" describes. |
+   | `master` | If the request is a change to the course documents, do the work on `master` and stop the mentor protocol here. Otherwise, run `git fetch --all` (if the repository has a remote) and `git branch -a --list "track/*" "*/track/*"`. Show the track branches, and ask which track to continue. If the user does not know, read the profile on each branch (`git show <branch>:learner/profile.md`) and show a short summary. For a known track, run `git switch <branch>`. For a new learner, make a branch as `docs/mentor/track-branches.md` describes. |
    | A different branch | Ask whether the branch is for changes to the course documents or for a learner. |
 
    If `learner/` contains files other than `.gitignore` on `master` (local data from an older version of the course), copy `learner/` to `learner-backup-<YYYY-MM-DD>/` before you switch. If the learner makes a new branch, the files stay in the working tree. Ask whether the files are the data of this learner, and commit them on the new branch.
-2. Read `learner/profile.md` and `learner/progress.md`. Find the case in this table and do the action:
+2. Read `learner/profile.md` and `learner/progress.md`. Do not read `learner/session-log-archive.md`. Find the case in this table and do the action:
 
    | Profile | Progress | Case | Action |
    |---|---|---|---|
@@ -55,8 +57,14 @@ Do these steps at the start of every session, before you teach:
    | Exists | Missing | Progress lost | Run `git log --all --oneline -- learner/progress.md` to find an earlier version, and offer to restore it. If there is no earlier version, create the file from `docs/templates/progress-template.md`. Ask the learner for their current phase and their completed exercises, and fill them in. |
 
    Do not teach before the profile exists, unless the learner refuses the assessment. If the learner refuses, write a minimal profile with the answers that you have, and mark the levels as "not assessed". Use the reference project (the ledger) until the learner selects a different one.
-3. Read the document of the current phase in `docs/phases/`. If the position in the progress file refers to a topic or an exercise that does not exist in the document (for example, the progress file comes from a different version of the course), tell the learner. Find the nearest matching topic or exercise with the learner, and correct the position.
-4. Give the learner a short status: the current phase and position, a summary of the last session log entry, and the recommended next step. Then ask what the learner wants to do.
+3. Read only the part of the current phase document in `docs/phases/` that the session needs. The phase documents are long, so do not read a full document at session start:
+   1. List the headings with their line numbers, for example `grep -nE '^#{2,4} ' docs/phases/<file>.md`.
+   2. Read the start of the document up to the first topic or module: the goal and the reading.
+   3. Read the section of the current topic, exercise, or project stage.
+   4. Read other sections only when the session needs them, for example the next topic, or "Done criteria" for the phase review.
+
+   If the position in the progress file refers to a topic or an exercise that does not exist in the headings (for example, the progress file comes from a different version of the course), tell the learner. Find the nearest matching topic or exercise with the learner, and correct the position.
+4. Give the learner a short status: the current phase and position, a summary of the last session log entry, and the recommended next step. Add one tip from `docs/token-usage.md` in one sentence. Select a tip that fits the plan for the session. In the first session, also give the link to the document. Do not give a tip if the "Token usage tips" preference in the profile is "Off". Then ask what the learner wants to do.
 
 If the learner gives a specific request in the first message (for example "Explain the borrow checker"), do steps 1–3 silently, then answer the request. Ask questions in step 1 only if you cannot find the track branch. Do the assessment first only if no profile exists.
 
@@ -67,13 +75,14 @@ If the learner gives a specific request in the first message (for example "Expla
 - **Project:** the documents use the reference project, the personal finance ledger (see "Reference stack facts"). If the "Project" section of the profile names a different domain, translate every project-specific detail (types, commands, file formats, external services) as `docs/mentor/project-selection.md` describes. Never tell the learner that they must build the ledger.
 - **Environment:** Rust runs natively on Windows, macOS, and Linux. Give shell commands for the operating system in the "Environment" section of the profile. The documents show Bash commands, and PowerShell commands where they are different.
 - When the learner completes an exercise, a project stage, or a phase, update `learner/progress.md` immediately.
+- When the learner completes the topic or the exercise of the session, or the session becomes long, recommend to save and start a new session. Do this one time in each session. A new session uses fewer tokens (see `docs/token-usage.md`).
 - At the end of a phase, do the phase review in `docs/mentor/assessment.md` (section "Phase review").
 
 ### Session end
 
 When the learner says "stop", "save", "end the session", or something with the same meaning, and before a long break in the work:
 
-1. Add an entry to the "Session log" in `learner/progress.md`: date, what the learner did, the next step, and open questions.
+1. Add an entry to the top of the "Session log" in `learner/progress.md`: date, what the learner did, the next step, and open questions. Keep only the 5 newest entries in the session log. Move older entries to the top of `learner/session-log-archive.md` (create the file if it does not exist). Before you move an entry, copy the facts that later sessions still need to "Notes for later sessions" in `learner/progress.md`. Read the archive only when the learner asks about an earlier session.
 2. Update the "Current position" in `learner/progress.md`.
 3. Update the "Observations" section of `learner/profile.md`: strengths, gaps, and misconceptions that you saw.
 4. Run `git status --porcelain -- learner/ labs/ .github/workflows/`. If the learner data or the learner code has changes that are not committed:
@@ -82,51 +91,6 @@ When the learner says "stop", "save", "end the session", or something with the s
    3. If the learner agrees, make sure that the current branch is the track branch. Stage only the learner files: `git add -- learner/ labs/ .github/workflows/`. Do a check that no build outputs (`target/`), database files, real personal data, or `.env` files are staged. Commit with a one-line message that describes the work, for example "Add phase 3 iterator exercises" or "Update progress after a phase 1 session".
    4. Ask whether they want to push. Push only to a remote that the learner owns, or to a remote where the owner permits track branches. If a remote with the name `private` exists, push the track branch to it. Do not push a track branch to a public remote before the learner agrees to make their data public. If `origin` is the original course repository and the learner cannot push to it, do not push. Tell the learner how to make a fork or add their own remote. Push with `git push -u <remote> <branch>`.
 5. Tell the learner what you saved and committed.
-
-### Reset (start from scratch)
-
-When the learner asks to reset the course, start from scratch, or clear their data, do these steps. **A reset deletes data. Do not skip the confirmation.** Do a reset only on a track branch, never on `master`.
-
-1. Tell the learner about the alternative: a new track branch (see "New track branch"). The old branch does not change. If the learner selects this alternative, stop here. Otherwise, ask what to reset. The learner can select one or more items:
-
-   | Item | What is deleted |
-   |---|---|
-   | Profile | `learner/profile.md` |
-   | Progress | `learner/progress.md` |
-   | Code | All of `labs/` and `.github/workflows/`: committed files, uncommitted changes, untracked files, and build outputs |
-   | All | All three items |
-
-2. Show the exact list of what will be deleted. Run `git ls-files -- learner/ labs/ .github/workflows/` and `git status --porcelain --ignored -- learner/ labs/ .github/workflows/`, and show the result. `learner/.gitignore` is not deleted. If there are uncommitted changes, warn the learner that these changes cannot be recovered after the reset.
-3. Offer a backup, and do it if the learner agrees: commit the uncommitted changes first (only if the learner agrees), then make a tag on the current commit: `git tag <branch>/backup-<YYYY-MM-DD>`, for example `track/2026-10-19/backup-2026-11-02`. The old data stays in the git history and in the tag.
-4. Ask for a clear confirmation, for example: "Type 'yes, reset' to continue." Continue only after a clear "yes".
-5. Do the reset:
-   - Profile: run `git rm -q -- learner/profile.md` (if it is tracked), or delete the file.
-   - Progress: run `git rm -q -- learner/progress.md` (if it is tracked), or delete the file.
-   - Code: run `git rm -r -q --ignore-unmatch -- labs/ .github/workflows/`, then delete the `labs/` and `.github/` directories with all remaining files.
-   - If you removed tracked files, commit with the message "Remove learner data to start the course again". Ask whether to push. Push only to a remote that the learner owns.
-6. Tell the learner what you deleted and where the backups are.
-7. If you deleted the profile, run the assessment in `docs/mentor/assessment.md` now. Do not ask whether the learner started the course before. If you deleted only the progress, create a new progress file from `docs/templates/progress-template.md` with the start date today.
-
-Never delete files outside the learner files during a reset. Never delete `learner/.gitignore` or the course documents.
-
-### Errors in the course
-
-The course documents and the mentor instructions can contain errors: wrong facts, wrong commands, broken links, unclear text, code examples that do not compile, or crate APIs that changed. When you or the learner find an error, suggest a pull request (PR) with the fix to the course repository. Then all learners get the fix.
-
-1. **Check that it is an error.** Reproduce it: run the command, compile the code, or read the source (for example the crate documentation for the version in `Cargo.lock`).
-2. **Tell the learner** what is wrong and what the fix is. Suggest a PR. Explain that a PR sends the fix to the maintainers of the course for a review.
-3. **If the learner agrees,** do these steps:
-   1. Commit or back up the learner work on the track branch first (see "Session end", step 4).
-   2. Update the local `master` from the course repository: `git switch master`, then `git pull`. Make a fix branch from `master`: `git switch -c fix/<short-name>`. **Never make a fix branch from a track branch:** a track branch contains personal data.
-   3. Make the fix. Keep it small: one error for each PR. Follow "Writing style" and "How to add documents". Check the fix: compile the changed code, run the changed command, and check the links.
-   4. Commit only the files of the fix, with a one-line commit message in the imperative. Never commit learner files (see "Track branches").
-   5. Push the fix branch to the fork of the learner. Most learners cannot push to the course repository. If the learner has no fork, help them make one: `gh repo fork --remote --remote-name fork`, or the "Fork" button on GitHub and `git remote add fork <url>`. Then push: `git push -u fork fix/<short-name>`.
-   6. Open the PR against the `master` branch of the course repository: `gh pr create`, or the link that `git push` prints. In the description, write what was wrong, how it was found, the fix, and how the fix was checked. **Never put profile data, progress data, or learner code in a PR.**
-   7. Switch back to the track branch. To use the fix before the maintainers merge it, merge the fix branch: `git merge fix/<short-name>`. Later, `git merge master` brings the merged fix. If the maintainers changed the fix in the review, a conflict can occur: resolve it with the version from `master`.
-4. **If the learner does not want a PR,** or cannot make one (for example no GitHub account): make the fix on a local fix branch in the same way, and merge it into the track branch. Tell the learner that the fix exists only in their copy. Write it in the session log, so that later sessions know about it.
-5. **If the correct fix is not clear,** suggest a GitHub issue in place of a PR. The issue describes the error, the steps to see it, and the expected result.
-
-The learner decides about each push and each PR. Do not push or open a PR without the agreement of the learner.
 
 ### Rules for learner data
 
@@ -166,10 +130,13 @@ docs/
   software-setup.md         Toolchain and editor setup on Windows, macOS, and Linux
   reading-list.md           All books, courses, and documentation
   glossary.md               Terms and abbreviations
+  token-usage.md            Tips to use fewer AI tokens in the course
   mentor/                   Instructions for the AI mentor
     assessment.md           Knowledge assessment and phase review
+    course-errors.md        What to do when the mentor or the learner finds an error in the course
     mentoring.md            How to teach, give hints, review, and debug
     project-selection.md    How to help the learner select a project domain, and how to translate
+    track-branches.md       How to make a track branch and how to reset the learner data
   phases/                   One document for each phase (0-9)
   projects/                 Project specifications and task documents
   topics/                   Detailed explanations of specific topics
@@ -180,7 +147,8 @@ labs/                       The learner's code. Only on track branches.
 learner/                    Learner data. Only on track branches.
   .gitignore                On master: ignores all learner data
   profile.md                Background, levels, project, environment, preferences, observations
-  progress.md               Current position, status, session log
+  progress.md               Current position, status, notes, the 5 newest session log entries
+  session-log-archive.md    Older session log entries
 .github/workflows/          The learner's CI pipeline (phase 8). Only on track branches.
 learner-backup-<date>/      Local backups of learner data. Ignored by git.
 ```
@@ -239,4 +207,4 @@ The course documents use this stack. The learner can use a different project dom
 - Commit learner files only on track branches (see "Track branches").
 - Write commit messages in Simplified Technical English, as one line in the imperative: "Add the CSV importer for the ledger".
 - Commit only when the learner asks, or when the learner agrees at the session end (see "Session end", step 4).
-- Fixes to the course go to the course repository as a pull request from a fix branch (see "Errors in the course" and `CONTRIBUTING.md`).
+- Fixes to the course go to the course repository as a pull request from a fix branch (see `docs/mentor/course-errors.md` and `CONTRIBUTING.md`).

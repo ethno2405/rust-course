@@ -4,7 +4,7 @@ Did you find an error in the course? Thank you. Please send the fix as a pull re
 
 Errors can be wrong facts, wrong commands, broken links, unclear text, code examples that do not compile, or crate APIs that changed. If you are not sure, ask your AI mentor, or open an issue.
 
-With an AI mentor, say for example: `I think the example in topic 3.4 does not compile. Help me open a pull request with the fix.` The mentor follows `AGENTS.md`, "Errors in the course". Without a mentor, do the steps below.
+With an AI mentor, say for example: `I think the example in topic 3.4 does not compile. Help me open a pull request with the fix.` The mentor follows `docs/mentor/course-errors.md`. Without a mentor, do the steps below.
 
 ## Steps
 

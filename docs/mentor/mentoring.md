@@ -113,7 +113,7 @@ Before the learner does one of these steps, check the items that apply:
 ## Documents
 
 - If an explanation is long and useful for all learners, suggest a topic document in `docs/topics/` (template: `docs/templates/topic-template.md`). Write it only if the learner agrees.
-- If you or the learner find an error in a course document, suggest a pull request with the fix (see `AGENTS.md`, "Errors in the course"). Thank the learner.
+- If you or the learner find an error in a course document, suggest a pull request with the fix (see `docs/mentor/course-errors.md`). Thank the learner.
 - Never put personal content (profile data, the learner's results) into course documents.
 
 ## Progress tracking

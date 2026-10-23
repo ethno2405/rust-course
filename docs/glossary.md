@@ -75,6 +75,7 @@ Add a term to this list when you find it for the first time.
 | SRP | Single responsibility principle. The "S" in SOLID. |
 | TDD | Test-driven development. Write a failing test, make it pass, then refactor. |
 | Test double | An object that replaces a real dependency in a test: a stub, a fake, a spy, or a mock. |
+| Token (AI model) | The unit of text that an AI model reads and writes. A token is a part of a word. The usage limits and the price of an AI agent depend on the number of tokens. See [token-usage.md](token-usage.md). |
 | Trait | A set of methods that types can implement. Similar to an interface. |
 | Trait object | A value of type `dyn Trait` behind a pointer. Its concrete type is known only at run time. |
 | TUI | Terminal user interface. |

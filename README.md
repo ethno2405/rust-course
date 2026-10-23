@@ -41,7 +41,7 @@ In each later session, open the agent in the repository root and type `Continue 
 
 ## Your data
 
-- The `learner/` directory contains `profile.md` (background, levels, project, environment, preferences, mentor observations) and `progress.md` (position, completed work, session log).
+- The `learner/` directory contains `profile.md` (background, levels, project, environment, preferences, mentor observations) and `progress.md` (position, completed work, notes, the newest session log entries). Older session log entries go to `session-log-archive.md`.
 - The `labs/` directory contains your code. From phase 8, `.github/workflows/` contains your CI pipeline.
 - You can read and edit all files. The mentor uses the content that it finds.
 - **Do not use real bank statements or other real personal data in the labs.** Use the generated sample data. The `.gitignore` file ignores database files and `.env` files.
@@ -238,6 +238,10 @@ Which crate do you recommend for dates, and why?
 ```
 The example in topic 3.4 does not compile. Help me open a pull request with the fix.
 ```
+
+## Use fewer tokens
+
+An AI agent has usage limits, or a price for each token. To use fewer tokens, keep sessions short: do one topic or one exercise in one session, then start a new session. The mentor gives you one tip at the start of each session. All tips are in [docs/token-usage.md](docs/token-usage.md).
 
 ## Use the course without an AI mentor
 
