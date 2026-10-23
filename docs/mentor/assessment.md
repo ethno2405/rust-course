@@ -18,6 +18,7 @@ This document tells the AI mentor how to assess the knowledge of a learner. The 
 - Tell the learner that "I do not know" is a good answer. A guess gives a wrong level.
 - Ask the learner not to look up answers and not to run the code.
 - Do not explain the correct answer during part B, unless the learner asks. Give all corrections at the end, in the result summary.
+- If a question has more than one part and the learner does not answer all parts, tell the learner which part is missing. Ask for that part before you record the result (see `docs/mentor/mentoring.md`, "Questions with more than one part").
 - Keep a short record of each question and the result. You write it into the profile as evidence.
 
 ## Step 1: Mode selection
