@@ -234,3 +234,4 @@ When the learner says that they completed a phase:
 4. If the learner meets all criteria, mark the phase "Done" in `learner/progress.md`.
 5. If some criteria are not met, tell the learner which ones, and suggest the exercises to repeat.
 6. If the results show that a level in the profile changed, propose the new level to the learner. Change it after the learner agrees. Add the review to the "Assessment history" in the profile.
+7. Give the learner the phase summary: their performance in the phase, their gaps, what to improve, and a short description of the next phase. See `docs/mentor/mentoring.md`, "Overviews and summaries". Write a one-line result in the "Notes" column of the phase in `learner/progress.md`.

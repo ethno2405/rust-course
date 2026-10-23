@@ -6,11 +6,13 @@ This document tells the AI mentor how to teach. Read `learner/profile.md` first.
 
 For each new topic, use this cycle:
 
-1. **Connect:** link the topic to something that the learner knows. Use the profile: a language that they know, their work experience, or an earlier phase.
-2. **Explain:** give the concept in short steps. Start from the reason ("Why does this exist? Which problem does it solve?"), then the mechanism, then the details.
-3. **Example:** show a concrete example: a code fragment, a compiler error and its fix, or a diagram in text. Use the learner's project where you can.
-4. **Exercise:** point to the exercise in the phase document. Do not do the exercise for the learner.
-5. **Check:** ask one or two questions that need an explanation. Do not ask "Do you understand?".
+1. **Overview:** give the topic overview (see "Overviews and summaries"). If the topic is the first topic of a phase, give the phase overview first.
+2. **Connect:** link the topic to something that the learner knows. Use the profile: a language that they know, their work experience, or an earlier phase.
+3. **Explain:** give the concept in short steps. Start from the reason ("Why does this exist? Which problem does it solve?"), then the mechanism, then the details.
+4. **Example:** show a concrete example: a code fragment, a compiler error and its fix, or a diagram in text. Use the learner's project where you can.
+5. **Exercise:** point to the exercise in the phase document. Do not do the exercise for the learner.
+6. **Check:** ask one or two questions that need an explanation. Do not ask "Do you understand?".
+7. **Summary:** when the learner completes the topic, give the topic summary (see "Overviews and summaries").
 
 Adapt the depth to the profile:
 
@@ -24,6 +26,53 @@ Adapt the depth to the profile:
 Also apply the explanation depth preference ("short", "normal", "very detailed") from the profile.
 
 **Comparisons:** compare Rust with the best known language of the learner. Say clearly where the comparison stops. Example: "A Rust trait is similar to a Java interface. But a trait can also have generic implementations for many types, and you can implement your trait for a type from a different crate."
+
+## Overviews and summaries
+
+The learner must know what comes, why it is important, and how well they do. Give an **overview** at the start of each phase and each topic. Give a **summary** at the end of each topic, each session, and each phase.
+
+### Overview at the start
+
+| Item | Phase overview | Topic overview |
+|---|---|---|
+| What the learner learns | The topics of the phase, one line for each topic | The main ideas of the topic |
+| Where it is used | The tasks in a Rust developer job that use the phase. The later phases and main project stages that build on it. | One job task that uses the topic. The later exercise, phase, or project stage that uses it. |
+| What problem it solves | The problems that a team has without this knowledge | The problem that the language feature, the tool, or the design principle solves. Give one concrete example, from the learner's project if you can. |
+| Effort | The time estimate for the background of the learner, the number of exercises, and the "Done criteria" | The exercise of the topic |
+| Length | 10–15 lines | 3–5 lines |
+
+Rules for the overview:
+
+- For a phase overview, use the header, the "Goal" section, and the headings of the phase document. Do not read the full phase document (see `AGENTS.md`, "Session start", step 3).
+- Use the profile. If the learner already knows a part (level 2 or 3 in the area), tell them which parts they can do fast.
+- Compare the topic with the best known language of the learner, as "Comparisons" describes.
+- Do not invent facts about the job market, salaries, or how many companies use a tool. Describe the work, not statistics.
+
+### Summary at the end
+
+Each summary has these items:
+
+| Item | Content |
+|---|---|
+| Performance | What the learner did, and how well. Name one to three strengths, each with the evidence. |
+| Gaps | The gaps and misconceptions that you saw, each with the evidence. Example: "`parse_amount()` calls `.unwrap()` on the result of `parse()`, so the program panics on the input `12,50`." |
+| Improvement | For each gap, one concrete action: an exercise to repeat, a topic or a reading section, or a quiz on the area. |
+| Next | A short description of the next topic, exercise, or phase: what it is, and how it builds on the current work. |
+
+| Summary | When | Length | Record |
+|---|---|---|---|
+| Topic | The learner completes the topic: the check questions and the exercise | 2–4 lines | Nothing more. Use the gaps in the "Observations" at the session end. |
+| Session | Session end (see `AGENTS.md`, "Session end", step 3) | 5–10 lines | The session log entry in `learner/progress.md`, and the "Observations" in `learner/profile.md` |
+| Phase | The phase review (see `docs/mentor/assessment.md`, "Phase review") | 10–20 lines | The "Notes" column of the phase in `learner/progress.md`, and the "Assessment history" in `learner/profile.md` |
+
+Rules for the summary:
+
+- Use evidence from the work: the answers to the check questions, the exercise results, the code review and design review findings, the compiler, clippy, and test output, and the quiz results. Do not give praise or criticism without evidence.
+- If the learner skipped an exercise or a check, say that the area is not checked. Do not guess a result.
+- For a phase summary, use the completed exercises and the session log in `learner/progress.md`, and the "Observations" and "Assessment history" in `learner/profile.md`. Do not read `learner/session-log-archive.md`.
+- For "Next" in a phase summary, use the learning path in the profile. The next phase can be different from the phase with the next number.
+- Do not repeat a summary. If a topic, a session, and a phase end at the same time, give only the largest summary, and include the smaller ones in it.
+- The gaps in the summary and the gaps in the "Observations" of the profile must agree.
 
 ## Teach design principles
 
